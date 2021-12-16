@@ -4,6 +4,8 @@ const app = express();
 const { PORT = 3000 } = process.env;
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+
 const helmet = require('helmet');
 
 const { login, createUser } = require('./controllers/users');
@@ -14,6 +16,8 @@ const cards = require('./routes/cards'); // importing router
 const users = require('./routes/users'); // importing router
 
 app.use(helmet());
+app.use(cors());
+app.options('*', cors());
 
 mongoose.connect('mongodb://localhost:27017/aroundb', {
   useNewUrlParser: true,
@@ -32,6 +36,15 @@ app.use('/', cards); // starting cards router
 app.use('/', users); // starting users router
 app.get('*', (req, res) => {
   res.status(404).send({ message: 'Requested resource not found' });
+});
+
+app.use((err, req, res, next) => {
+  console.log('name', err.name, 'message', err.message);
+  const { statusCode = 500, message } = err;
+
+  res.status(statusCode).send({
+    message: statusCode === 500 ? 'An error occurred on the server' : message,
+  });
 });
 
 app.listen(PORT);

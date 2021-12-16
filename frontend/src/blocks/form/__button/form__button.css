@@ -1,0 +1,39 @@
+.form__button {
+    background: #000000;
+    border-radius: 2px;
+    color: white;
+    width: calc(100% - (36px * 2 ));
+    height: 50.15px;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: center;
+    border: 0;
+    margin: 0 36px 36px;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+    transition: visibility 0s, opacity 0.5s linear;
+  }
+  
+  .form__button:hover {
+    opacity: 0.8;
+  }
+  
+  @media screen and (max-width: 750px) {
+    .form__button {
+      width: calc(100% - (25px * 2 ));
+      height: 48px;
+      margin: 0 25px 36px;
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    .form__button {
+      width: calc(100% - (22px * 2 ));
+      height: 46px;
+      font-size: 14px;
+      line-height: 17px;
+      margin: 0 22px 25px;
+    }
+  }

@@ -11,12 +11,12 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, 'some-secret-key');
+    payload = jwt.verify(token, 'super-strong-secret');
   } catch (err) {
     return res.status(401).send({ message: 'Authorization Required' });
   }
 
   req.user = payload; // assigning the payload to the request object
-  console.log(req.user);
+
   next(); // sending the request to the next middleware
 };

@@ -1,0 +1,29 @@
+.profile__task {
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 22px;
+  margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 373px;
+}
+
+@media screen and (max-width: 900px) {
+  .profile__task {
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+    margin: 0 auto 40px;
+    max-width: 300px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .profile__task {
+    font-size: 14px;
+    line-height: 17px;
+    margin: 0 auto 36px;
+    max-width: 196px;
+  }
+}

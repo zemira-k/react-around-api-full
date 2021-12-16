@@ -1,0 +1,33 @@
+.profile__big-rectangle {
+  border: 2px solid #FFFFFF;
+  border-radius: 2px;
+  width: 150px;
+  height: 50px;
+  margin: auto 0;
+  padding: 0;
+  background-color: black;
+  background-image: url("../../../images/Plus.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 22px;
+  cursor: pointer;
+  transition: visibility 0s, opacity 0.5s linear;
+}
+
+.profile__big-rectangle:hover {
+  opacity: 0.6;  
+}
+
+@media screen and (max-width: 900px) {
+  .profile__big-rectangle {    
+    margin: 0 auto;
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .profile__big-rectangle {    
+    margin: 0 19px;
+    width: calc(100% - (19px * 2));
+  }
+}

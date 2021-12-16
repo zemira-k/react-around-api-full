@@ -1,0 +1,11 @@
+.element__item {    
+    border-radius: 10px 10px 0 0;
+    background-size: cover;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }

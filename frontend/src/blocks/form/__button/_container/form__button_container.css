@@ -1,0 +1,18 @@
+.form__button_container {
+  display: flex;
+  justify-content: center;
+  margin: 186px auto 15px;
+  color: black;
+  background-color: #ffffff;
+  width: 358px;
+}
+@media screen and (max-width: 750px) {
+  .form__button-container {
+    width: 300px;
+  }
+}
+@media screen and (max-width: 500px) {
+  .form__button-container {
+    width: 238px;
+  }
+}

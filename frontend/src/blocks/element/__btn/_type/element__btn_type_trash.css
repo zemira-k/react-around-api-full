@@ -1,0 +1,21 @@
+.element__btn_type_trash {
+  height: 19.3px;
+  width: 18px;
+  position: absolute;
+  top: 18px;
+  right: 15px;
+  border: none;
+  outline: none;
+  z-index: 5;
+  cursor: pointer;
+  padding: 0;
+  transition: visibility 0s, opacity 0.5s linear;
+  background-image: url("../../../../images/Trash.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center center;
+}
+
+.element__btn_type_trash:hover {
+  opacity: 0.6;
+}

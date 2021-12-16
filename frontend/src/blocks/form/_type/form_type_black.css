@@ -1,0 +1,6 @@
+.form_type_black {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 351px;
+}

@@ -1,0 +1,19 @@
+.profile__caption {
+  display: flex;
+  flex-direction: row;
+  margin: 0 0 16px;
+  width: 100%;
+}
+
+@media screen and (max-width: 900px) {
+  .profile__caption {
+    margin: 0 auto 15px;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .profile__caption {
+    margin-bottom: 14px;
+  }
+}

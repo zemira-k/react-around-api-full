@@ -54,7 +54,7 @@ const likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.id,
     { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet
-    { new: true },
+    { new: true }
   )
     .orFail(() => {
       const error = new Error('card not found');
@@ -71,7 +71,7 @@ const unlikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.id,
     { $pull: { likes: req.user._id } }, // remove _id from the array
-    { new: true },
+    { new: true }
   )
     .orFail(() => {
       const error = new Error('card not found');
@@ -79,7 +79,7 @@ const unlikeCard = (req, res) => {
       throw error;
     })
     .then((card) => {
-      res.status(200).send(card);
+      res.status(200).send({ data: card });
     })
     .catch((err) => {
       costumErrorCatch(err, res);

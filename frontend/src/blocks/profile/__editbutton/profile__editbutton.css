@@ -1,0 +1,33 @@
+.profile__editbutton {
+  height: 24px;
+  width: 24px;
+  border: 1px solid #FFFFFF;
+  padding: 0;
+  background-color: black;
+  cursor: pointer;
+  color: black;
+  align-self: center;
+  background-image: url("../../../images/EditPen.svg");
+  background-repeat: no-repeat;
+  background-size: 10px;
+  background-position: center;
+  transition: visibility 0s, opacity 0.5s linear;
+}
+
+.profile__editbutton:hover {
+  opacity: 0.6;  
+}
+
+@media screen and (max-width: 900px) {
+  .profile__editbutton {
+    height: 21px;
+    width: 21px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .profile__editbutton {
+    height: 18px;
+    width: 18px;
+  }
+}

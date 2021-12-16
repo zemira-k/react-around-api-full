@@ -1,0 +1,6 @@
+.info {
+  height: 330px;
+  color: black;
+  display: flex;
+  flex-direction: column;
+}

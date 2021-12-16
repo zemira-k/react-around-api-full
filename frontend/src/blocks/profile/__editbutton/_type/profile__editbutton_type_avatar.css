@@ -1,0 +1,9 @@
+.profile__editbutton_type_avatar {
+  height: 26px;
+  width: 26px;
+  border: none;
+  background-size: 26px;
+  background-color: rgba(0, 0, 0, 0);
+  transition: visibility 0s, opacity 1s linear;
+  visibility: hidden;  
+}

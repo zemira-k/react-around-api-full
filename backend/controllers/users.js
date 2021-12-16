@@ -1,6 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const NotFoundError = require('../errors/not-found-err');
+const ConflictError = require('../errors/conflict-err');
+const BadReqError = require('../errors/bad-req-err');
 
 const costumErrorCatch = (err, res) => {
   if (err.name === 'CastError') {
@@ -10,57 +13,46 @@ const costumErrorCatch = (err, res) => {
   } else {
     res.status(500).send({ message: err.message || 'internal server error' });
   }
+  next();
 };
 
 const test = (req, res) => {
   res.send(req.user);
 };
 
-const getAllUsers = (req, res) => {
+const getAllUsers = (req, res, next) => {
   User.find({})
     .then((users) => {
       res.status(200).send(users);
     })
-    .catch((err) => {
-      res.status(500).send({ message: err.message || 'internal server error' });
-    });
+    .catch(next);
 };
 
-const getUser = (req, res) => {
+const getUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(() => {
-      const error = new Error('user not found');
-      error.statusCode = 404;
-      throw error;
-    })
     .then((user) => {
-      res.status(200).send(user);
+      if (user) {
+        res.status(200).send({ data: user });
+      } else {
+        throw new NotFoundError('user not found');
+      }
     })
-    .catch((err) => {
-      costumErrorCatch(err, res);
-    });
+    .catch(next);
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
-
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'super-strong-secret', {
         expiresIn: '7d',
       });
-      console.log('user: ', user._id);
-      res.header('authorization', `Bearer ${token}`).send({ token });
-
       res.send({ token });
     })
-    .catch((err) => {
-      // authentication error
-      res.status(401).send({ message: err.message });
-    });
+    .catch(next);
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { email, password } = req.body;
   bcrypt
     .hash(password, 10)
@@ -72,14 +64,20 @@ const createUser = (req, res) => {
     )
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      costumErrorCatch(err, res);
-    });
+      if (err.name === 'MongoServerError') {
+        throw new ConflictError('server not responding, please try again');
+      } else if (err.name === 'ValidationError') {
+        throw new BadReqError('email and password required');
+      }
+    })
+    .catch(next);
 };
 
 const updateProfile = (req, res) => {
+  const { name, about } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
-    { name: 'new', about: 'new' },
+    { name, about },
     {
       new: true, // the then handler receives the updated entry as input
       runValidators: true, // the data will be validated before the update
@@ -98,11 +96,11 @@ const updateProfile = (req, res) => {
 };
 
 const updateAvatar = (req, res) => {
+  const { avatar } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
     {
-      avatar:
-        'https://images.unsplash.com/photo-1638035966446-b2954fdf3525?ixlib.jpg',
+      avatar,
     },
     {
       new: true, // the then handler receives the updated entry as input
