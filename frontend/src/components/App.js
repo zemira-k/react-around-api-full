@@ -19,13 +19,6 @@ import InfoTooltip from "./InfoTooltip";
 
 function App() {
   const history = useHistory();
-  // states for cards and user
-  const [currentUser, setcurrentUser] = useState({});
-  const [cards, setCards] = useState([]);
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState({});
 
   // states for login logout and register
   const [loggedIn, setLoggedIn] = useState(false);
@@ -35,6 +28,14 @@ function App() {
     isSuccessful: false,
   });
   const [token, setToken] = useState(localStorage.getItem("jwt"));
+
+  // states for cards and user
+  const [currentUser, setCurrentUser] = useState({});
+  const [cards, setCards] = useState([]);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState({});
 
   // check if logged in
   React.useEffect(() => {
@@ -59,7 +60,7 @@ function App() {
       api
         .getUserInfo(token)
         .then((res) => {
-          setcurrentUser(res.data);
+          setCurrentUser(res.data);
           api
             .getInitialCards(token)
             .then((cards) => {
@@ -83,7 +84,6 @@ function App() {
 
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i === currentUser._id);
-    console.log("liked", isLiked);
     api
       .changeLikeCardStatus(card._id, !isLiked, token)
       .then((newCard) => {
@@ -107,7 +107,7 @@ function App() {
     api
       .setUserInfo(data, token)
       .then((res) => {
-        setcurrentUser(res);
+        setCurrentUser(res.data);
         closeAllPopups();
       })
       .catch((err) => console.log(err));
@@ -117,7 +117,7 @@ function App() {
     api
       .setUserAvatar(data.avatar, token)
       .then((res) => {
-        setcurrentUser(res);
+        setCurrentUser(res.data);
         closeAllPopups();
       })
       .catch((err) => console.log(err));
@@ -208,15 +208,15 @@ function App() {
     });
   }
 
-  // React.useEffect(() => {
-  //   const closeByEscape = (e) => {
-  //     if (e.key === "Escape") {
-  //       closeAllPopups();
-  //     }
-  //   };
-  //   document.addEventListener("keydown", closeByEscape);
-  //   return () => document.removeEventListener("keydown", closeByEscape);
-  // }, []);
+  React.useEffect(() => {
+    const closeByEscape = (e) => {
+      if (e.key === "Escape") {
+        closeAllPopups();
+      }
+    };
+    document.addEventListener("keydown", closeByEscape);
+    return () => document.removeEventListener("keydown", closeByEscape);
+  }, []);
 
   return (
     <div className="page__container">

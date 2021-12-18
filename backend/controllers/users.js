@@ -5,20 +5,16 @@ const NotFoundError = require('../errors/not-found-err');
 const ConflictError = require('../errors/conflict-err');
 const BadReqError = require('../errors/bad-req-err');
 
-const costumErrorCatch = (err, res) => {
-  if (err.name === 'CastError') {
-    res.status(400).send({ message: 'Invalid user id' });
-  } else if (err.statusCode === 404) {
-    res.status(404).send({ message: err.message });
-  } else {
-    res.status(500).send({ message: err.message || 'internal server error' });
-  }
-  next();
-};
-
-const test = (req, res) => {
-  res.send(req.user);
-};
+// const costumErrorCatch = (err, res) => {
+//   if (err.name === 'CastError') {
+//     res.status(400).send({ message: 'Invalid user id' });
+//   } else if (err.statusCode === 404) {
+//     res.status(404).send({ message: err.message });
+//   } else {
+//     res.status(500).send({ message: err.message || 'internal server error' });
+//   }
+//   next();
+// };
 
 const getAllUsers = (req, res, next) => {
   User.find({})
@@ -30,11 +26,12 @@ const getAllUsers = (req, res, next) => {
 
 const getUser = (req, res, next) => {
   User.findById(req.user._id)
+    .orFail(() => {
+      throw new NotFoundError('user not found');
+    })
     .then((user) => {
       if (user) {
         res.status(200).send({ data: user });
-      } else {
-        throw new NotFoundError('user not found');
       }
     })
     .catch(next);
@@ -73,7 +70,7 @@ const createUser = (req, res, next) => {
     .catch(next);
 };
 
-const updateProfile = (req, res) => {
+const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -84,18 +81,16 @@ const updateProfile = (req, res) => {
       upsert: false, // if the user entry wasn't found, it will be created
     }
   )
-    .orFail(() => {
-      const error = new Error('user not found');
-      error.statusCode = 404;
-      throw error;
-    })
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
-      costumErrorCatch(err, res);
-    });
+      if (err.name === 'ValidationError') {
+        throw new BadReqError('all inputs required');
+      }
+    })
+    .catch(next);
 };
 
-const updateAvatar = (req, res) => {
+const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -108,15 +103,13 @@ const updateAvatar = (req, res) => {
       upsert: false, // if the user entry wasn't found, it will be created
     }
   )
-    .orFail(() => {
-      const error = new Error('user not found');
-      error.statusCode = 404;
-      throw error;
-    })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      costumErrorCatch(err, res);
-    });
+      if (err.name === 'ValidationError') {
+        throw new BadReqError('insert a correct link');
+      }
+    })
+    .catch(next);
 };
 
 module.exports = {
@@ -126,5 +119,4 @@ module.exports = {
   updateProfile,
   updateAvatar,
   login,
-  test,
 };
