@@ -1,8 +1,10 @@
 const express = require('express');
 const { errors } = require('celebrate');
-const app = express();
+require('dotenv').config();
+
 const { PORT = 3000 } = process.env;
 const mongoose = require('mongoose');
+const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { celebrate, Joi } = require('celebrate');
@@ -17,8 +19,14 @@ const cards = require('./routes/cards'); // importing router
 const users = require('./routes/users'); // importing router
 
 app.use(helmet());
-app.use(cors());
 app.options('*', cors());
+app.use(cors());
+
+// for localDb testing
+// mongoose.connect('mongodb://localhost:27017/aroundbLocal', {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
 
 mongoose.connect('mongodb://localhost:27017/aroundb', {
   useNewUrlParser: true,
@@ -29,6 +37,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(requestLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Server will crash now');
+  }, 0);
+});
 
 app.post(
   '/signin',

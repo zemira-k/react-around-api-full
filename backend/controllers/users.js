@@ -1,20 +1,10 @@
 const bcrypt = require('bcryptjs');
+const { NODE_ENV, JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-err');
 const ConflictError = require('../errors/conflict-err');
 const BadReqError = require('../errors/bad-req-err');
-
-// const costumErrorCatch = (err, res) => {
-//   if (err.name === 'CastError') {
-//     res.status(400).send({ message: 'Invalid user id' });
-//   } else if (err.statusCode === 404) {
-//     res.status(404).send({ message: err.message });
-//   } else {
-//     res.status(500).send({ message: err.message || 'internal server error' });
-//   }
-//   next();
-// };
 
 const getAllUsers = (req, res, next) => {
   User.find({})
@@ -41,9 +31,16 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'super-strong-secret', {
-        expiresIn: '7d',
-      });
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'super-strong-secret',
+        {
+          expiresIn: '7d',
+        }
+      );
+      // const token = jwt.sign({ _id: user._id }, 'super-strong-secret', {
+      //   expiresIn: '7d',
+      // });
       res.send({ token });
     })
     .catch(next);
