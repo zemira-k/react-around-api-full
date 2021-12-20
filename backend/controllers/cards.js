@@ -1,7 +1,7 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/not-found-err');
 const BadReqError = require('../errors/bad-req-err');
-const ServerError = require('../errors/server-err');
+const ForbiddenError = require('../errors/forbidden-err');
 
 const getAllCards = (req, res, next) => {
   Card.find({})
@@ -34,7 +34,7 @@ const deleteCard = (req, res, next) => {
           res.status(200).send({ data: card });
         });
       } else if (req.user._id.toString() !== card.owner.toString()) {
-        throw new BadReqError('can not delete card of other user');
+        throw new ForbiddenError('can not delete card of other user');
       } else if (err.name === 'CastError') {
         throw new BadReqError('Invalid card id');
       }

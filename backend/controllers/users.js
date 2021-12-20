@@ -56,7 +56,15 @@ const createUser = (req, res, next) => {
         password: hash, // adding the hash to the database
       })
     )
-    .then((user) => res.status(201).send({ id: user._id, email: user.email }))
+    .then((user) => {
+      res.status(201).send({
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+      });
+    })
     .catch((err) => {
       if (err.name === 'MongoServerError') {
         throw new ConflictError(
