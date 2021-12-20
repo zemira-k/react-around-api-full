@@ -35,10 +35,9 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     validate: {
-      validator(v) {
-        return /^(https?):\/\/(www\.)?[a-z0-9\-/.]+/gi.test(v);
+      validator(link) {
+        return validator.isURL(link);
       },
-      message: 'Link is not valid!',
     },
     required: true,
     default: 'https://pictures.s3.yandex.net/resources/avatar_1604080799.jpg',
