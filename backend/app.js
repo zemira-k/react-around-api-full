@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const { celebrate, Joi } = require('celebrate');
 const helmet = require('helmet');
-const { requestLogger, errorLogger } = require('./middleware/logger');
+const { requestLogger, errorLogger } = require('./logs/logger');
 
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middleware/auth');

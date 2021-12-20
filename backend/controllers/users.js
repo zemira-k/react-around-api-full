@@ -56,10 +56,12 @@ const createUser = (req, res, next) => {
         password: hash, // adding the hash to the database
       })
     )
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.status(201).send({ id: user._id, email: user.email }))
     .catch((err) => {
       if (err.name === 'MongoServerError') {
-        throw new ConflictError('server not responding, please try again');
+        throw new ConflictError(
+          'The request could not be completed due to a conflict with the current state of the target resource'
+        );
       } else if (err.name === 'ValidationError') {
         throw new BadReqError('email and password required');
       }
