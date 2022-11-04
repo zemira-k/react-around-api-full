@@ -1,5 +1,8 @@
 // const BaseUrl = "http://localhost:3000";
-const BaseUrl = "https://api.zemira.students.nomoreparties.site";
+// const BaseUrl = "https://api.around.students.nomoreparties.site";
+const BaseUrl = "https://api.around.students.nomoredomainssbs.ru";
+
+// students.nomoredomainssbs.ru
 const headers = {
   Accept: "application/json",
   "Content-Type": "application/json",
